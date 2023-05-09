@@ -114,10 +114,21 @@ end;
 
 function is_binary_search_tree(r : ptrTree) : boolean;
 begin
-	
-	is_binary_search_tree := (get_max(r^.left) < r^.value) and (get_min(r^.right) >= r^.value) ;
 
-	
+	if(r <> nil)then
+	begin 
+        if(r^.left <> nil) and (r^.right <> nil) then
+            is_binary_search_tree := (get_max(r^.left) < r^.value) and (get_min(r^.right) >= r^.value) and (is_binary_search_tree(r^.right)) and (is_binary_search_tree(r^.left)) 
+        else if (r^.left <> nil) then 
+            is_binary_search_tree := (get_max(r^.left) < r^.value)and (is_binary_search_tree(r^.left)) 
+        else if (r^.right <> nil) then
+            is_binary_search_tree := (get_min(r^.right) >= r^.value)and(is_binary_search_tree(r^.right))
+         else 
+            is_binary_search_tree := true;
+   end
+    else
+    is_binary_search_tree := true;
+
 end;
 
 var arr : array [0..99] of integer;
@@ -125,34 +136,34 @@ arrLength:integer;
 root : ptrTree;
 begin
 	
-	arrLength := 12;
-arr[0] := 50;
-arr[1] := 22;
-arr[2] := 5;
-arr[3] := 79;
-arr[4] := 45;
-arr[5] := 66;
-arr[6] := 30;
-arr[7] := 70;
-arr[8] := 49;
-arr[9] := 80;
-arr[10]:= 6;
-arr[11]:= 32;
+	arrLength := 9;
+arr[0] := 45;
+arr[1] := 15;
+arr[2] := 79;
+arr[3] := 90;
+arr[4] := 10;
+arr[5] := 55;
+arr[6] := 12;
+arr[7] := 20;
+arr[8] := 50;
     
     from_arr_to_binary_tree(root,arr,arrLength);
     Print_Pre_Fixe(root);
     writeln;
+    
+
     writeln('Sorted ? : ' ,is_binary_search_tree(root));
     writeln;
-    writeln('Changing 66 to 65 : ');
-	root^.right^.left^.value := 65;
-	 writeln('Sorted ? : ' ,is_binary_search_tree(root));
-	 
-	 writeln;
-    writeln('Changing 65 to 45 : ');
-	root^.right^.left^.value := 45;
-	 writeln('Sorted ? : ' ,is_binary_search_tree(root));
-	
+
+    writeln('Change 12 to 11 : (expect no problem)');
+    root^.left^.left^.right^.value := 11;
+    writeln('Sorted ? : ' ,is_binary_search_tree(root));
+    writeln;   
+    
+    writeln('Change 11 to 9 : (expect problem)');
+    root^.left^.left^.right^.value := 9;
+    writeln('Sorted ? : ' ,is_binary_search_tree(root));
+    writeln;   
 end.
 
 
